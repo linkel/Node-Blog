@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "Node-Blog",
   "version": "1.0.0",
   "description": "A blog backend running on node!",
@@ -11,40 +10,9 @@
   "author": "linkel <ironcarbide@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "knex": "^0.16.3",
     "sqlite3": "^4.0.6"
-=======
-  "name": "webapi-blog",
-  "version": "1.0.0",
-  "description": "Web API Blog Project",
-  "main": "index.js",
-  "scripts": {
-    "server": "nodemon index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LambdaSchool/Node-Blog.git"
-  },
-  "keywords": [
-    "node",
-    "express",
-    "blog",
-    "api"
-  ],
-  "author": "Lambda School",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/LambdaSchool/Node-Blog/issues"
-  },
-  "homepage": "https://github.com/LambdaSchool/Node-Blog#readme",
-  "dependencies": {
-    "knex": "^0.16.3",
-    "sqlite3": "^4.0.6"
-  },
-  "devDependencies": {
-    "knex-cleaner": "^1.1.4",
-    "nodemon": "^1.18.10"
->>>>>>> upstream/master
   }
 }

@@ -1,7 +1,7 @@
-<<<<<<< HEAD
 const express = require('express');
 const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb.js');
+const cors = require('cors');
 const server = express();
 
 function upperCaseUser(req, res, next) {
@@ -9,7 +9,8 @@ function upperCaseUser(req, res, next) {
     next(); // this needs to uppercase a username before sending 
 }
 
-server.use(express.json())
+server.use(express.json());
+server.use(cors());
 
 // User DB //
 
@@ -65,7 +66,25 @@ server.put('/api/users/:id', (req, res) => {
     }
 })
 
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    userDb.getById(id)
+    .then(user => {
+      if (!user) {
+        res.status(404).json({message: "The user with the specified ID does not exist."})
+      } else {
+        userDb.remove(id)
+        .then(response => {
+          res.status(200).json(user)
+        })
+        .catch(err => {
+          res.status(500).json({error: "The user could not be removed."})
+        })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({error: "The user could not be removed."})
+    })
+  })
+
 server.listen(8000, () => console.log('API running on port 8000'));
-=======
-// code away!
->>>>>>> upstream/master
