@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require('express');
 const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb.js');
@@ -65,3 +66,6 @@ server.put('/api/users/:id', (req, res) => {
 })
 
 server.listen(8000, () => console.log('API running on port 8000'));
+=======
+// code away!
+>>>>>>> upstream/master
