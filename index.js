@@ -42,6 +42,71 @@ server.get('/api/posts/:id', (req, res) => {
     })
 })
 
+server.post('/api/posts', (req, res) => {
+    console.log(req.body)
+    const post = req.body;
+    if (!post || post.length < 1) {
+        res.status(400).json({ error: "No post! Please provide text and userId for the post." });
+    }
+    if (post.text && post.userId) {
+        console.log("yes it has")
+        const id = post.userId; // Interesting. README says user_id, but the database says userId. 
+        userDb.getById(id)
+        .then(user => {
+            console.log("now we can put in the post")
+            postDb.insert(post)
+            .then(response => {
+                // Wait, but what happens if a user gets created, we make ap ost by that user, and then we delete the user?
+                postDb.getById(response.id)
+                .then(post => res.status(201).json(post))
+                .catch(err => res.status(500).json({ message: "Insert successful but unable to find id in database after insert.", error: err}))
+                })
+            .catch(err => {
+                console.log(err)
+                res.status(500).json({ error: "There was an error while saving the post to the database" })
+            });
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({error: "Please provide a userId of an existing user."})
+        })
+    } else {
+        res.status(400).json({ error: "Please provide text and userId for the post." });
+    }
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postDb.remove(id)
+    .then(response => {
+        res.status(200).json({message: `Successfully deleted id: ${id}`})
+    })
+    .catch(err => {
+        res.status(500).json({error: "Delete failed."})
+    })
+})
+
+server.put('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    const post = req.body;
+    if (!post || post.length < 1) {
+        res.status(400).json({ error: "No post! Please provide text and userId for the post." });
+    }
+    if (post.text && post.userId) {
+        postDb.update(id, post)
+        .then(response => {
+            res.status(200).json({message: "Successfully edited post!"})
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({error: "Update failed."})
+        })
+    }
+    else {
+        res.status(500).json({ error: "Please provide text and userId for the post."})
+    }
+})
+
 
 // User DB //
 
@@ -51,6 +116,16 @@ server.get('/api/users', (req, res) => {
     .catch(err => {
         console.log(err)
         res.status(500).json({error: "Not able to obtain user list."})
+    })
+})
+
+server.get('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    userDb.getById(id)
+    .then(user => res.status(200).json(user))
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({error: "Could not find user."})
     })
 })
 
