@@ -5,12 +5,43 @@ const cors = require('cors');
 const server = express();
 
 function upperCaseUser(req, res, next) {
-    console.log(req.body)
+    if (req.body.name) {
+        req.body.name = req.body.name.toUpperCase();
+    }
     next(); // this needs to uppercase a username before sending 
 }
 
 server.use(express.json());
 server.use(cors());
+server.use(upperCaseUser);
+
+// Posts DB //
+
+server.get('/api/posts', (req, res) => {
+    postDb.get()
+    .then(posts => res.status(200).json({posts}))
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({error: "Not able to obtain post list."})
+    })
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postDb.getById(id)
+    .then(post => {
+        if (post.length < 1) {
+            res.status(404).json({message : "The post with the specified ID does not exist."})
+        } else {
+            res.status(200).json({post})
+        }
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({ error: "The posts information could not be retrieved." })
+    })
+})
+
 
 // User DB //
 
