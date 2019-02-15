@@ -8,7 +8,7 @@ function upperCaseUser(req, res, next) {
     if (req.body.name) {
         req.body.name = req.body.name.toUpperCase();
     }
-    next(); // this needs to uppercase a username before sending 
+    next();
 }
 
 server.use(express.json());
@@ -192,5 +192,17 @@ server.delete('/api/users/:id', (req, res) => {
       res.status(500).json({error: "The user could not be removed."})
     })
   })
+
+server.get('/api/users/posts/:id', (req, res) => {
+    const id=req.params.id;
+    userDb.getUserPosts(id)
+    .then(response => {
+        res.status(200).json(response);
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({error: "Unable to obtain user posts"})
+    })
+})
 
 server.listen(8000, () => console.log('API running on port 8000'));
